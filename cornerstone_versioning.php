@@ -66,6 +66,23 @@ class Cornerstone_Versioning {
     }
 
     /**
+     * Validates if cornerstone is available on the specified site
+     *
+     * @return bool - true if available, false if not
+     */
+    public function cv_is_cornerstone_available($id){
+        if(empty($id))
+            false;
+
+        $cs_data = get_post_meta($id, '_cornerstone_data', true);
+        if(!empty($cs_data))
+            return true;
+
+        return false;
+
+    }
+
+    /**
      * Callback of our Custom Meta Box
      *
      * @param $post - The global Post
@@ -140,6 +157,7 @@ class Cornerstone_Versioning {
 
     /**
      * Validates if a user is able to edit the product
+     * AND check if cornerstone is available
      *
      * @return bool
      */
@@ -150,6 +168,9 @@ class Cornerstone_Versioning {
             $return = false;
 
         if(!current_user_can($this->capability))
+            $return = false;
+
+        if(!$this->cv_is_cornerstone_available(get_the_ID()))
             $return = false;
 
         $return = apply_filters('cv_is_user_able_to', $return);
@@ -181,6 +202,7 @@ class Cornerstone_Versioning {
         $data = array();
         $cs_data = cs_get_serialized_post_meta($id, '_cornerstone_data', true);
         $cs_settings = cs_get_serialized_post_meta($id, '_cornerstone_settings', true);
+        $cs_version = get_post_meta($id, '_cornerstone_version', true);
         $cs_post_content = get_post($id)->post_content;
         $save_as_json = apply_filters( 'cornerstone_store_as_json', true );
 
@@ -199,6 +221,14 @@ class Cornerstone_Versioning {
             }
 
             $data['_cornerstone_settings'] = $cs_settings;
+        }
+
+        if(!empty($cs_version)){
+            if ( is_array( $cs_version ) && $save_as_json ) {
+                $cs_version = wp_slash( cs_json_encode( $cs_version ) );
+            }
+
+            $data['_cornerstone_version'] = $cs_version;
         }
 
         if(!empty($cs_post_content))
@@ -238,6 +268,11 @@ class Cornerstone_Versioning {
 
             if(!empty($data['_cornerstone_settings']))
                 cs_update_serialized_post_meta($id, '_cornerstone_settings', $data['_cornerstone_settings']);
+        }
+
+        if(isset($data['_cornerstone_version'])){
+            if(!empty($data['_cornerstone_version']))
+                update_post_meta($id, '_cornerstone_version', $data['_cornerstone_version']);
         }
 
         if(isset($data['content'])){
