@@ -224,10 +224,6 @@ class Cornerstone_Versioning {
         }
 
         if(!empty($cs_version)){
-            if ( is_array( $cs_version ) && $save_as_json ) {
-                $cs_version = wp_slash( cs_json_encode( $cs_version ) );
-            }
-
             $data['_cornerstone_version'] = $cs_version;
         }
 
