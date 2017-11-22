@@ -164,7 +164,7 @@ class Cornerstone_Versioning {
     public function cv_is_user_valid(){
 
         $return = true;
-        if(!is_user_logged_in() || !is_admin())
+        if(!is_user_logged_in())
             $return = false;
 
         if(!current_user_can($this->capability))
