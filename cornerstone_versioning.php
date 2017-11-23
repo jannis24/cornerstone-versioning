@@ -106,11 +106,11 @@ class Cornerstone_Versioning {
                 $delete_url = $this->cv_generate_action_url($args);
                 $version_name = 'Version: ' . str_replace($this->version_prefix, '', $revision['meta_key']);
 
-                $html_body .= ' <tr class="alternate">';
-                $html_body .= '<th class="check-column" scope="row">' . $version_name . '</th>';
+                $html_body .= '<tr class="alternate">';
+                $html_body .= '<td class="check-column" scope="row">' . $version_name . '</td>';
                 $html_body .= '<td class="column-columnname">';
-                $html_body .= '<span><a href="' . $restore_url . '">' . $restore_var . '</a></span> | ';
-                $html_body .= '<span><a style="color:red;" href="' . $delete_url . '">' . $delete_var . '</a></span>';
+                $html_body .= '<span><a class="cr-restore-revision button button-primary" href="' . $restore_url . '">' . $restore_var . '</a></span> <span class="cr-sep">|</span> ';
+                $html_body .= '<span><a class="cr-delete-revision" href="' . $delete_url . '">' . $delete_var . '</a></span>';
                 $html_body .= '</td>';
                 $html_body .= '</tr>';
             }
@@ -118,17 +118,90 @@ class Cornerstone_Versioning {
 
         ob_start();
         ?>
+        <style>
+        #cornerstone-versioning .inside {
+        padding: 0;
+        margin: 0;
+        }
+
+        #cornerstone-versioning table {
+        border: none;
+        }
+
+        #cornerstone-versioning th.cr-revision-head,
+        #cornerstone-versioning th.cr-action-head {
+        text-align: left;
+        width: 500px;
+        }
+
+        #cornerstone-versioning th,
+        #cornerstone-versioning td {
+        padding: 10px 12px;
+        vertical-align: middle;
+        }
+
+        #cornerstone-versioning th {
+        font-weight: 600;
+        }
+
+        #cornerstone-versioning td {
+
+        }
+
+        #cornerstone-versioning .cr-delete-revision {
+        border-color: transparent;
+        background-color: transparent;
+        box-shadow: none;
+        color: #a00;
+        }
+
+        #cornerstone-versioning .cr-delete-revision:hover {
+        color: #d54e21;
+        }
+
+        /* #cornerstone-versioning .cr-delete-revision:hover {
+        background-color: #d54e21;
+        border-color: #d54e21;
+        color: #fff;
+        } */
+
+        #cornerstone-versioning tbody tr td {
+        border-top: 1px solid #dfdfdf;
+        background-color: #f7f7f7;
+        }
+
+        #cornerstone-versioning tbody tr:first-child td {
+        border-top: none;
+        }
+
+        #cornerstone-versioning tbody tr:hover td {
+        background-color: #fff;
+        }
+
+        #cornerstone-versioning td span {
+        vertical-align: middle;
+        display: inline-block;
+        margin-right: 5px;
+        }
+
+        #cornerstone-versioning td span:last-child {
+        margin-right: 0;
+        }
+
+        #cornerstone-versioning td span.cr-sep {
+        color: #aaa;
+        }
+        </style>
         <table class="widefat fixed" cellspacing="0">
             <thead>
             <tr>
-                <th id="columnname" class="manage-column column-columnname num" scope="col" style="width:80%"><?php echo __('Revision', $this->text_domain); ?></th>
-                <th id="columnname" class="manage-column column-columnname num" scope="col" style="width:20%"><?php echo __('Action', $this->text_domain); ?></th>
-
+                <th class="cr-revision-head manage-column column-columnname num" scope="col" style="width:65%"><?php echo __('Revision', $this->text_domain); ?></th>
+                <th class="cr-action-head manage-column column-columnname num" scope="col" style="width:35%"><?php echo __('Action', $this->text_domain); ?></th>
             </tr>
             </thead>
 
             <tbody>
-            <?php echo $html_body; ?>
+                <?php echo $html_body; ?>
             </tbody>
         </table>
         <?php
